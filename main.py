@@ -181,7 +181,7 @@ try:
             for r in manager.import_resources(GAME_UUID):
                 if r.specification == "game" or r.specification == "thumbnail":
                     pass
-                elif r.specification == "tile":
+                elif "tile" in r.specification:
                     r.save_if_doesnt_exists("tiles")
                 else:
                     r.save_by_erasing()
