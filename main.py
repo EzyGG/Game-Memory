@@ -217,7 +217,9 @@ score_won = [0, 0]
 def apply_score(won: bool, close: bool = False):
     if manager.get_user() and manager.get_user().connected() and score_won != [0, 0]:
         manager.start_new_game()
-        manager.commit_new_set(GAME_UUID, won, score_won[0], score_won[1], other="advent={:.1f}".format(100-(numberof_tile/2)/numberof_duo*100))
+        manager.commit_new_set(GAME_UUID, won, score_won[0] if score_won[0] > 0 else 0,
+                               score_won[1] if score_won[1] > 0 else 0,
+                               other="advent={:.1f}".format(100-(numberof_tile/2)/numberof_duo*100))
     if close:
         root.destroy()
         sys.exit()
@@ -258,7 +260,7 @@ class BtnItem(Button):
             print(f"{numberof_tile},{numberof_duo}")
             advancement_lbl.config(text="Advancement : {:.1f} %".format(100-(numberof_tile/2)/numberof_duo*100))
             if numberof_tile == 0:
-                Label(grid_frame, text="Win !", font=winfont, fg='green', bg='#FFFFFF').place(relx=0.5, rely=0.5, anchor=CENTER)
+                Label(grid_frame, text=f"Win !\nEXP : {score_won[0] if score_won[0] > 0 else 0}\nGP : {score_won[1] if score_won[1] > 0 else 0}", font=winfont, fg='green', bg='#FFFFFF').place(relx=0.5, rely=0.5, anchor=CENTER)
                 apply_score(True)
         else:  # bad guess
             score_won[0] -= score_worth[levelvar.get()][0]
