@@ -26,7 +26,7 @@ class Error(Tk):
         self.geometry("300x300")
         self.configure(background=self.app_bg)
         try:
-            self.iconbitmap("tic_tac_toe.ico")
+            self.iconbitmap("icon.ico")
         except Exception:
             pass
 
@@ -177,7 +177,14 @@ CONTINUE = "\n\nIf you Continue, you will not be able to get rewards and update 
 try:
     try:
         try:
-            manager.setup(GAME_UUID, GAME_VERSION, __update=False)
+            manager.setup(GAME_UUID, GAME_VERSION, __update=False, __import_missing_resources=False)
+            for r in manager.import_resources(GAME_UUID):
+                if r.specification == "game" or r.specification == "thumbnail":
+                    pass
+                elif r.specification == "tile":
+                    r.save_if_doesnt_exists("tiles")
+                else:
+                    r.save_by_erasing()
         except manager.UserParameterExpected as e:
             Error("UserParameterExpected",
                   str(e) + "\nYou must run the game from the Launcher to avoid this error." + CONTINUE)
